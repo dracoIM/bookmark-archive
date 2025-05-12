@@ -22,6 +22,7 @@ model User {
   updatedAt     DateTime   @updatedAt
   emailVerified Boolean
   sessions      Session[]
+  tags          Tag[]
 
   @@map("user")
 }
@@ -72,12 +73,14 @@ model Bookmark {
   title       String
   url         String
   description String?
-  faviconUrl  String?
+  content     String?
+  faviconUrl  String
   imageUrl    String?
   siteName    String?
+  
   isPublic    Boolean       @default(false)
   tags        BookmarkTag[]
-  notes       Note[]
+  slug        String        @unique
   highlights  Highlight[]
   blogPost    BlogPost?     @relation(fields: [blogPostId], references: [id])
   blogPostId  String?
@@ -98,6 +101,9 @@ model Folder {
 model Tag {
   id            String        @id @default(cuid())
   name          String        @unique
+  user_id       String
+  user          User          @relation(fields: [user_id], references: [id])
+  color         String        @default("#000000")
   bookmark_tags BookmarkTag[]
 }
 
@@ -110,20 +116,13 @@ model BookmarkTag {
   @@unique([tag_id, bookmark_id])
 }
 
-model Note {
-  id         String   @id @default(cuid())
-  bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
-  bookmarkId String
-  content    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
 
 model Highlight {
   id         String   @id @default(cuid())
   bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
   bookmarkId String
-  text       String
+  startingPosition Int
+  endingPosition Int
   comment    String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

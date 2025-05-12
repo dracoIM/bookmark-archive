@@ -1,15 +1,40 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Check, Twitter, Instagram, Youtube, Globe, Bell, Moon, Sun, LogOut, CreditCard } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import Link from "next/link"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  Check,
+  Twitter,
+  Instagram,
+  Youtube,
+  Globe,
+  Bell,
+  Moon,
+  Sun,
+  LogOut,
+  CreditCard,
+} from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
 
 export default function SettingsPage() {
   return (
@@ -72,7 +97,9 @@ export default function SettingsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Account Information</CardTitle>
-                  <CardDescription>Update your account details and profile information.</CardDescription>
+                  <CardDescription>
+                    Update your account details and profile information.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
@@ -83,7 +110,11 @@ export default function SettingsPage() {
 
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" defaultValue="john.doe@example.com" />
+                      <Input
+                        id="email"
+                        type="email"
+                        defaultValue="john.doe@example.com"
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -99,7 +130,10 @@ export default function SettingsPage() {
 
                     <div className="space-y-2">
                       <Label htmlFor="bio">Bio</Label>
-                      <Input id="bio" defaultValue="Bookmark enthusiast and content curator" />
+                      <Input
+                        id="bio"
+                        defaultValue="Bookmark enthusiast and content curator"
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -133,7 +167,9 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="confirm-password">Confirm New Password</Label>
+                      <Label htmlFor="confirm-password">
+                        Confirm New Password
+                      </Label>
                       <Input id="confirm-password" type="password" />
                     </div>
 
@@ -155,13 +191,16 @@ export default function SettingsPage() {
                 <CardHeader>
                   <CardTitle>Connected Accounts</CardTitle>
                   <CardDescription>
-                    Connect your social media accounts to automatically save bookmarks and content.
+                    Connect your social media accounts to automatically save
+                    bookmarks and content.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-medium">Connected Platforms</h3>
-                    <p className="text-xs text-muted-foreground">Last synced 5 minutes ago</p>
+                    <p className="text-xs text-muted-foreground">
+                      Last synced 5 minutes ago
+                    </p>
                   </div>
 
                   <div className="grid gap-4">
@@ -172,7 +211,9 @@ export default function SettingsPage() {
                         </div>
                         <div>
                           <h4 className="font-medium">Twitter</h4>
-                          <p className="text-sm text-muted-foreground">Save your liked tweets and bookmarks</p>
+                          <p className="text-sm text-muted-foreground">
+                            Save your liked tweets and bookmarks
+                          </p>
                         </div>
                       </div>
                       <Button variant="default" size="sm">
@@ -188,7 +229,9 @@ export default function SettingsPage() {
                         </div>
                         <div>
                           <h4 className="font-medium">Instagram</h4>
-                          <p className="text-sm text-muted-foreground">Save your saved posts</p>
+                          <p className="text-sm text-muted-foreground">
+                            Save your saved posts
+                          </p>
                         </div>
                       </div>
                       <Button variant="default" size="sm">
@@ -204,7 +247,9 @@ export default function SettingsPage() {
                         </div>
                         <div>
                           <h4 className="font-medium">YouTube</h4>
-                          <p className="text-sm text-muted-foreground">Save your watch later and liked videos</p>
+                          <p className="text-sm text-muted-foreground">
+                            Save your watch later and liked videos
+                          </p>
                         </div>
                       </div>
                       <Button variant="outline" size="sm">
@@ -219,7 +264,9 @@ export default function SettingsPage() {
                         </div>
                         <div>
                           <h4 className="font-medium">Medium</h4>
-                          <p className="text-sm text-muted-foreground">Save your bookmarked articles</p>
+                          <p className="text-sm text-muted-foreground">
+                            Save your bookmarked articles
+                          </p>
                         </div>
                       </div>
                       <Button variant="default" size="sm">
@@ -247,7 +294,9 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label htmlFor="sync-frequency">Sync Frequency</Label>
-                        <p className="text-xs text-muted-foreground">How often to check for new content</p>
+                        <p className="text-xs text-muted-foreground">
+                          How often to check for new content
+                        </p>
                       </div>
                       <Select defaultValue="hourly">
                         <SelectTrigger className="w-[180px]">
@@ -265,7 +314,9 @@ export default function SettingsPage() {
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label htmlFor="sync-history">Sync History</Label>
-                        <p className="text-xs text-muted-foreground">Import historical content when connecting</p>
+                        <p className="text-xs text-muted-foreground">
+                          Import historical content when connecting
+                        </p>
                       </div>
                       <Switch id="sync-history" defaultChecked />
                     </div>
@@ -282,7 +333,9 @@ export default function SettingsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Preferences</CardTitle>
-                  <CardDescription>Customize your experience with BookmarkVault.</CardDescription>
+                  <CardDescription>
+                    Customize your experience with BookmarkVault.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
@@ -345,7 +398,8 @@ export default function SettingsPage() {
                       <div className="space-y-0.5">
                         <Label htmlFor="archive-content">Archive Content</Label>
                         <p className="text-xs text-muted-foreground">
-                          Save a full copy of content to prevent loss if original is removed
+                          Save a full copy of content to prevent loss if
+                          original is removed
                         </p>
                       </div>
                       <Switch id="archive-content" defaultChecked />
@@ -369,8 +423,12 @@ export default function SettingsPage() {
 
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <Label htmlFor="private-by-default">Private by Default</Label>
-                        <p className="text-xs text-muted-foreground">Make all new bookmarks private by default</p>
+                        <Label htmlFor="private-by-default">
+                          Private by Default
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Make all new bookmarks private by default
+                        </p>
                       </div>
                       <Switch id="private-by-default" />
                     </div>
@@ -379,7 +437,8 @@ export default function SettingsPage() {
                       <div className="space-y-0.5">
                         <Label htmlFor="analytics">Usage Analytics</Label>
                         <p className="text-xs text-muted-foreground">
-                          Allow collection of anonymous usage data to improve the service
+                          Allow collection of anonymous usage data to improve
+                          the service
                         </p>
                       </div>
                       <Switch id="analytics" defaultChecked />
@@ -397,14 +456,20 @@ export default function SettingsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Notifications</CardTitle>
-                  <CardDescription>Configure how and when you receive notifications.</CardDescription>
+                  <CardDescription>
+                    Configure how and when you receive notifications.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <Label htmlFor="notifications-enabled">Enable Notifications</Label>
-                        <p className="text-xs text-muted-foreground">Receive notifications from BookmarkVault</p>
+                        <Label htmlFor="notifications-enabled">
+                          Enable Notifications
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Receive notifications from BookmarkVault
+                        </p>
                       </div>
                       <Switch id="notifications-enabled" defaultChecked />
                     </div>
@@ -420,7 +485,8 @@ export default function SettingsPage() {
                           <div>
                             <p className="text-sm font-medium">New Bookmarks</p>
                             <p className="text-xs text-muted-foreground">
-                              When new bookmarks are automatically saved from connected accounts
+                              When new bookmarks are automatically saved from
+                              connected accounts
                             </p>
                           </div>
                         </div>
@@ -431,9 +497,12 @@ export default function SettingsPage() {
                         <div className="flex items-center gap-2">
                           <Bell className="h-4 w-4 text-muted-foreground" />
                           <div>
-                            <p className="text-sm font-medium">Content Removal</p>
+                            <p className="text-sm font-medium">
+                              Content Removal
+                            </p>
                             <p className="text-xs text-muted-foreground">
-                              When bookmarked content is removed from its original source
+                              When bookmarked content is removed from its
+                              original source
                             </p>
                           </div>
                         </div>
@@ -444,9 +513,12 @@ export default function SettingsPage() {
                         <div className="flex items-center gap-2">
                           <Bell className="h-4 w-4 text-muted-foreground" />
                           <div>
-                            <p className="text-sm font-medium">Thread Updates</p>
+                            <p className="text-sm font-medium">
+                              Thread Updates
+                            </p>
                             <p className="text-xs text-muted-foreground">
-                              When there are new comments on threads you've bookmarked
+                              When there are new comments on threads you've
+                              bookmarked
                             </p>
                           </div>
                         </div>
@@ -457,8 +529,12 @@ export default function SettingsPage() {
                         <div className="flex items-center gap-2">
                           <Bell className="h-4 w-4 text-muted-foreground" />
                           <div>
-                            <p className="text-sm font-medium">Product Updates</p>
-                            <p className="text-xs text-muted-foreground">News about product updates and new features</p>
+                            <p className="text-sm font-medium">
+                              Product Updates
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              News about product updates and new features
+                            </p>
                           </div>
                         </div>
                         <Switch defaultChecked />
@@ -473,23 +549,33 @@ export default function SettingsPage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-medium">Email</p>
-                          <p className="text-xs text-muted-foreground">john.doe@example.com</p>
+                          <p className="text-xs text-muted-foreground">
+                            john.doe@example.com
+                          </p>
                         </div>
                         <Switch defaultChecked />
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium">Push Notifications</p>
-                          <p className="text-xs text-muted-foreground">Browser and mobile notifications</p>
+                          <p className="text-sm font-medium">
+                            Push Notifications
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Browser and mobile notifications
+                          </p>
                         </div>
                         <Switch defaultChecked />
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium">In-App Notifications</p>
-                          <p className="text-xs text-muted-foreground">Notifications within the application</p>
+                          <p className="text-sm font-medium">
+                            In-App Notifications
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Notifications within the application
+                          </p>
                         </div>
                         <Switch defaultChecked />
                       </div>
@@ -507,7 +593,9 @@ export default function SettingsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Billing & Subscription</CardTitle>
-                  <CardDescription>Manage your subscription and payment methods.</CardDescription>
+                  <CardDescription>
+                    Manage your subscription and payment methods.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
@@ -522,11 +610,15 @@ export default function SettingsPage() {
                       <div className="flex justify-between items-center mb-4">
                         <div>
                           <h4 className="text-xl font-bold">Pro Plan</h4>
-                          <p className="text-sm text-muted-foreground">Billed annually</p>
+                          <p className="text-sm text-muted-foreground">
+                            Billed annually
+                          </p>
                         </div>
                         <div className="text-right">
                           <p className="text-xl font-bold">$8.99/month</p>
-                          <p className="text-sm text-muted-foreground">$107.88/year</p>
+                          <p className="text-sm text-muted-foreground">
+                            $107.88/year
+                          </p>
                         </div>
                       </div>
 
@@ -545,7 +637,9 @@ export default function SettingsPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <Check className="h-4 w-4 text-green-500" />
-                          <p className="text-sm">Advanced search and filtering</p>
+                          <p className="text-sm">
+                            Advanced search and filtering
+                          </p>
                         </div>
                       </div>
 
@@ -571,7 +665,9 @@ export default function SettingsPage() {
                           </div>
                           <div>
                             <p className="font-medium">Visa ending in 4242</p>
-                            <p className="text-sm text-muted-foreground">Expires 12/2025</p>
+                            <p className="text-sm text-muted-foreground">
+                              Expires 12/2025
+                            </p>
                           </div>
                         </div>
                         <Button variant="outline" size="sm">
@@ -594,11 +690,17 @@ export default function SettingsPage() {
                       <div className="flex items-center justify-between p-4 border-b border-card-border">
                         <div>
                           <p className="font-medium">Pro Plan - Annual</p>
-                          <p className="text-sm text-muted-foreground">May 1, 2023</p>
+                          <p className="text-sm text-muted-foreground">
+                            May 1, 2023
+                          </p>
                         </div>
                         <div className="text-right">
                           <p className="font-medium">$107.88</p>
-                          <Button variant="link" size="sm" className="h-auto p-0">
+                          <Button
+                            variant="link"
+                            size="sm"
+                            className="h-auto p-0"
+                          >
                             Download
                           </Button>
                         </div>
@@ -606,11 +708,17 @@ export default function SettingsPage() {
                       <div className="flex items-center justify-between p-4">
                         <div>
                           <p className="font-medium">Pro Plan - Annual</p>
-                          <p className="text-sm text-muted-foreground">May 1, 2022</p>
+                          <p className="text-sm text-muted-foreground">
+                            May 1, 2022
+                          </p>
                         </div>
                         <div className="text-right">
                           <p className="font-medium">$107.88</p>
-                          <Button variant="link" size="sm" className="h-auto p-0">
+                          <Button
+                            variant="link"
+                            size="sm"
+                            className="h-auto p-0"
+                          >
                             Download
                           </Button>
                         </div>
@@ -624,5 +732,5 @@ export default function SettingsPage() {
         </div>
       </Tabs>
     </div>
-  )
+  );
 }

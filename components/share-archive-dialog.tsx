@@ -91,20 +91,6 @@ export function ShareArchiveDialog() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="allow-comments">Allow Comments</Label>
-                  <p className="text-xs text-muted-foreground">
-                    Let viewers comment on your bookmarks
-                  </p>
-                </div>
-                <Switch
-                  id="allow-comments"
-                  checked={shareSettings.allowComments}
-                  onCheckedChange={() => toggleSetting("allowComments")}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
                   <Label htmlFor="show-categories">Show Categories</Label>
                   <p className="text-xs text-muted-foreground">
                     Display category labels on shared bookmarks

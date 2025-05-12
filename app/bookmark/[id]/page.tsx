@@ -31,7 +31,7 @@ export default async function BookmarkPage({
     return (
       <div className="container max-w-4xl py-8">
         <div className="mb-6">
-          <Link href="/">
+          <Link href="/dashboard">
             <Button variant="ghost" size="sm" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               Back to bookmarks
@@ -40,11 +40,11 @@ export default async function BookmarkPage({
         </div>
 
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <h1 className="text-2xl font-bold mb-4">Bookmark Not Found</h1>
+          <h1 className="text-2xl font-bold mb-4"> Bookmark Not Found</h1>
           <p className="text-muted-foreground mb-6">
             The bookmark you're looking for doesn't exist or has been removed.
           </p>
-          <Link href="/">
+          <Link href="/dashboard">
             <Button>Return to Home</Button>
           </Link>
         </div>
@@ -55,7 +55,7 @@ export default async function BookmarkPage({
   return (
     <div className="container max-w-4xl py-8">
       <div className="flex items-center justify-between mb-6">
-        <Link href="/">
+        <Link href="/dashboard">
           <Button variant="ghost" size="sm" className="gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back to bookmarks

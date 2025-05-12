@@ -1,19 +1,31 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { AlertTriangle, Archive, ExternalLink, Clock, Calendar } from "lucide-react"
-import Link from "next/link"
-import { BookmarkCard } from "@/components/bookmark-card"
+import { useState } from "react";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  AlertTriangle,
+  Archive,
+  ExternalLink,
+  Clock,
+  Calendar,
+} from "lucide-react";
+import Link from "next/link";
+import { BookmarkCard } from "@/components/bookmark-card";
+import { Bookmark, Tag } from "@prisma/client";
+import { format } from "date-fns";
 
 interface DeletedContentFallbackProps {
-  bookmark: any
+  bookmark: Bookmark & {
+    tags: Tag[];
+  };
 }
 
-export function DeletedContentFallback({ bookmark }: DeletedContentFallbackProps) {
-  const [showingCached, setShowingCached] = useState(false)
+export function DeletedContentFallback({
+  bookmark,
+}: DeletedContentFallbackProps) {
+  const [showingCached, setShowingCached] = useState(false);
 
   return (
     <div className="space-y-8">
@@ -24,20 +36,31 @@ export function DeletedContentFallback({ bookmark }: DeletedContentFallbackProps
               <AlertTriangle className="h-6 w-6 text-yellow-600 dark:text-yellow-500" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-xl font-semibold">Content No Longer Available</h2>
+              <h2 className="text-xl font-semibold">
+                Content No Longer Available
+              </h2>
               <p className="text-muted-foreground max-w-md">
-                This content has been removed from its original source and is no longer available. It was last
-                accessible {bookmark.lastAvailable}.
+                The content has been removed from its original source and is no
+                longer available. It was last accessible{" "}
+                {format(bookmark.updatedAt, "LLL d, yy")}.
               </p>
             </div>
 
             <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <Button variant="outline" className="gap-2" onClick={() => setShowingCached(!showingCached)}>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => setShowingCached(!showingCached)}
+              >
                 <Archive className="h-4 w-4" />
                 {showingCached ? "Hide Cached Version" : "View Cached Version"}
               </Button>
               <Button variant="outline" className="gap-2" asChild>
-                <a href={bookmark.url} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={bookmark.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <ExternalLink className="h-4 w-4" />
                   Try Original Link
                 </a>
@@ -65,36 +88,46 @@ export function DeletedContentFallback({ bookmark }: DeletedContentFallbackProps
             <div className="mt-6 pt-6 border-t">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Badge
-                    variant="outline"
-                    className={`${bookmark.categoryColor.replace("bg-", "border-")} px-2 py-0.5`}
-                  >
-                    {bookmark.category}
-                  </Badge>
+                  {bookmark.tags.map((tag) => (
+                    <Badge
+                      variant="outline"
+                      style={{
+                        color: tag.color,
+                      }}
+                    >
+                      {tag.name}
+                    </Badge>
+                  ))}
+
                   <span className="text-sm text-muted-foreground">•</span>
-                  <span className="text-sm text-muted-foreground">{bookmark.date}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {format(bookmark.createdAt, "LLL d, yy")}
+                  </span>
                 </div>
               </div>
 
               <h1 className="text-xl font-bold mb-2">{bookmark.title}</h1>
-              <p className="text-muted-foreground mb-4">{bookmark.description}</p>
+              <p className="text-muted-foreground mb-4">
+                {bookmark.description}
+              </p>
 
               <div className="p-4 border border-card-border rounded-md bg-muted/50">
                 <p className="text-sm text-muted-foreground italic">
-                  This is a cached version of the content saved when you bookmarked it. The original content has since
-                  been removed or made private by its creator.
+                  This is a cached version of the content saved when you
+                  bookmarked it. The original content has since been removed or
+                  made private by its creator.
                 </p>
               </div>
 
-              {bookmark.image && (
+              {bookmark.imageUrl && (
                 <div className="mt-4 opacity-70">
                   <img
-                    src={bookmark.image || "/placeholder.svg"}
+                    src={bookmark.imageUrl || "/placeholder.svg"}
                     alt={bookmark.title}
                     className="w-full rounded-lg object-cover max-h-[300px] filter grayscale"
                   />
                   <p className="text-xs text-muted-foreground mt-1 text-center">
-                    Cached image from {bookmark.lastAvailable}
+                    Cached image from {bookmark.content}
                   </p>
                 </div>
               )}
@@ -104,16 +137,16 @@ export function DeletedContentFallback({ bookmark }: DeletedContentFallbackProps
         <CardFooter className="bg-yellow-100/50 dark:bg-yellow-900/10 px-6 py-3 flex justify-between">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4" />
-            <span>Saved on May 2, 2023</span>
+            <span>Saved on {format(bookmark.createdAt, "LLL d, yy")}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock className="h-4 w-4" />
-            <span>Content removed {bookmark.lastAvailable}</span>
+            <span>Content removed {bookmark.content}</span>
           </div>
         </CardFooter>
       </Card>
 
-      {bookmark.relatedBookmarks && bookmark.relatedBookmarks.length > 0 && (
+      {/* {bookmark.relatedBookmarks && bookmark.relatedBookmarks.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Related Bookmarks</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -208,26 +241,26 @@ export function DeletedContentFallback({ bookmark }: DeletedContentFallbackProps
               if (!related) return null
 
               return (
-                <Link href={`/bookmark/${relatedId}`} key={relatedId}>
-                  <BookmarkCard
-                    title={related.title}
-                    description={related.description}
-                    source={related.source}
-                    sourceIcon={related.sourceIcon}
-                    date={related.date}
-                    image={related.image}
-                    category={related.category}
-                    categoryColor={related.categoryColor}
-                    isFavorite={related.isFavorite}
-                    hasThread={related.hasThread}
-                    commentCount={related.commentCount}
-                  />
-                </Link>
+                // <Link href={`/bookmark/${relatedId}`} key={relatedId}>
+                //   <BookmarkCard
+                //     title={related.title}
+                //     description={related.description}
+                //     source={related.source}
+                //     sourceIcon={related.sourceIcon}
+                //     date={related.date}
+                //     image={related.imageUrl}
+                //     category={related.category}
+                //     categoryColor={related.categoryColor}
+                //     isFavorite={related.isFavorite}
+                //     hasThread={related.hasThread}
+                //     commentCount={related.commentCount}
+                //   />
+                // </Link>
               )
             })}
           </div>
         </div>
-      )}
+      )} */}
     </div>
-  )
+  );
 }
