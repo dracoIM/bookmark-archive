@@ -74,16 +74,17 @@ model Bookmark {
   url         String
   description String?
   content     String?
-  faviconUrl  String
+  faviconUrl  String?
   imageUrl    String?
   siteName    String?
   
   isPublic    Boolean       @default(false)
   tags        BookmarkTag[]
-  slug        String        @unique
+  slug        String?        @unique 
   highlights  Highlight[]
   blogPost    BlogPost?     @relation(fields: [blogPostId], references: [id])
   blogPostId  String?
+ 
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 }
