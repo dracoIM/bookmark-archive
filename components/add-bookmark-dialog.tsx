@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,15 +10,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { PlusCircle } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { PlusCircle } from "lucide-react";
 
 export function AddBookmarkDialog() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -32,14 +38,19 @@ export function AddBookmarkDialog() {
         <DialogHeader>
           <DialogTitle>Add new bookmark</DialogTitle>
           <DialogDescription>
-            Enter the URL or manually fill in the details of the content you want to save.
+            Enter the URL or manually fill in the details of the content you
+            want to save.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="url">URL</Label>
             <Input id="url" placeholder="https://example.com/article" />
-            <Button variant="outline" size="sm" className="mt-1 justify-self-end">
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-1 justify-self-end"
+            >
               Fetch details
             </Button>
           </div>
@@ -49,10 +60,10 @@ export function AddBookmarkDialog() {
             <Input id="title" placeholder="Article title" />
           </div>
 
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label htmlFor="description">Description</Label>
             <Textarea id="description" placeholder="Brief description of the content" />
-          </div>
+          </div> */}
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
@@ -96,5 +107,5 @@ export function AddBookmarkDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -53,7 +53,7 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            <Link href="/auth/magic-link`">
+            <Link href="/auth/magic-link">
               <Button variant="ghost">Sign In</Button>
             </Link>
             <Link href="/dashboard">

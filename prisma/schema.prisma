@@ -131,7 +131,7 @@ model Highlight {
 
 model BlogSource {
   id        String     @id @default(cuid())
-  url       String
+  url       String     @unique
   title     String?
   posts     BlogPost[]
   createdAt DateTime   @default(now())
@@ -143,7 +143,7 @@ model BlogPost {
   blog        BlogSource @relation(fields: [blogId], references: [id])
   blogId      String
   title       String
-  url         String
+  url         String     @unique
   summary     String?
   content     String?
   publishedAt DateTime?
