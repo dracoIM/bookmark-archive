@@ -1,21 +1,22 @@
 import { extract } from "@extractus/article-extractor";
+import TurndownService from "turndown";
 import { prisma } from "../prisma";
+
+const turndown = new TurndownService();
 
 export async function bookmarkBlogByUrl(userId: string, url: string) {
   try {
     const article = await extract(url);
     if (!article) throw new Error("Unable to extract article");
 
+    const markdown = article.content ? turndown.turndown(article.content) : "";
+
     const blogSource = await prisma.blogSource.upsert({
       where: { url },
       update: {},
       create: {
         url,
-        title:
-          article.siteName ||
-          article.source ||
-          article.title ||
-          "Unknown Source",
+        title: article.source ?? article.title ?? "Unknown Source",
       },
     });
 
@@ -26,8 +27,9 @@ export async function bookmarkBlogByUrl(userId: string, url: string) {
         blogId: blogSource.id,
         user_id: userId,
         url,
-        title: article.title || "Untitled",
-        summary: article.description || article.excerpt || "",
+        title: article.title ?? "Untitled",
+        summary: article.description ?? "",
+        content: markdown,
         publishedAt: article.published ? new Date(article.published) : null,
       },
     });
@@ -36,10 +38,11 @@ export async function bookmarkBlogByUrl(userId: string, url: string) {
       data: {
         userId,
         url,
-        title: article.title || "Untitled",
-        description: article.description || article.excerpt || "",
-        faviconUrl: article.image || "",
-        siteName: article.siteName || blogSource.title,
+        title: article.title ?? "Untitled",
+        description: article.description ?? "",
+        content: markdown,
+        faviconUrl: article.image ?? "",
+        siteName: blogSource.title,
         slug: blogPost.id,
         blogPostId: blogPost.id,
       },

@@ -144,6 +144,7 @@ model BlogPost {
   title       String
   url         String
   summary     String?
+  content     String?
   publishedAt DateTime?
   user_id     String
   user        User       @relation(fields: [user_id], references: [id])
