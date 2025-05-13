@@ -48,7 +48,14 @@ export async function bookmarkBlogByUrl(userId: string, url: string) {
       },
     });
 
-    return { success: true };
+    return {
+      success: true,
+      title: article.title ?? "Untitled",
+      description: article.description ?? "",
+      markdown,
+      siteName: blogSource.title,
+      faviconUrl: article.image ?? "",
+    };
   } catch (error: any) {
     console.error("Blog fetch error:", error.message);
     await prisma.fetchLog.create({

@@ -25,6 +25,64 @@ import { PlusCircle } from "lucide-react";
 
 export function AddBookmarkDialog() {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [platform, setPlatform] = useState("");
+  const [category, setCategory] = useState("");
+
+  const fetchDetails = async () => {
+    if (!url) return;
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/bookmark/fetch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to fetch");
+
+      setTitle(data.title || "");
+      setDescription(data.description || "");
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveBookmark = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/bookmark/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url,
+          title,
+          description,
+          platform,
+          category,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save");
+
+      setOpen(false);
+      // optionally reset form
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -42,33 +100,51 @@ export function AddBookmarkDialog() {
             want to save.
           </DialogDescription>
         </DialogHeader>
+
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
             <Label htmlFor="url">URL</Label>
-            <Input id="url" placeholder="https://example.com/article" />
+            <Input
+              id="url"
+              placeholder="https://example.com/article"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            />
             <Button
               variant="outline"
               size="sm"
               className="mt-1 justify-self-end"
+              onClick={fetchDetails}
+              disabled={loading}
             >
-              Fetch details
+              {loading ? "Fetching..." : "Fetch details"}
             </Button>
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="title">Title</Label>
-            <Input id="title" placeholder="Article title" />
+            <Input
+              id="title"
+              placeholder="Article title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
 
-          {/* <div className="grid gap-2">
+          <div className="grid gap-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea id="description" placeholder="Brief description of the content" />
-          </div> */}
+            <Textarea
+              id="description"
+              placeholder="Brief description of the content"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="platform">Platform</Label>
-              <Select>
+              <Select onValueChange={setPlatform}>
                 <SelectTrigger id="platform">
                   <SelectValue placeholder="Select platform" />
                 </SelectTrigger>
@@ -84,7 +160,7 @@ export function AddBookmarkDialog() {
 
             <div className="grid gap-2">
               <Label htmlFor="category">Category</Label>
-              <Select>
+              <Select onValueChange={setCategory}>
                 <SelectTrigger id="category">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
@@ -98,12 +174,21 @@ export function AddBookmarkDialog() {
               </Select>
             </div>
           </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>
+
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={loading}
+          >
             Cancel
           </Button>
-          <Button onClick={() => setOpen(false)}>Save Bookmark</Button>
+          <Button onClick={saveBookmark} disabled={loading}>
+            {loading ? "Saving..." : "Save Bookmark"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
