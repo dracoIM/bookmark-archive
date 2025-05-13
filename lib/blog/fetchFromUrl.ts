@@ -4,7 +4,11 @@ import { prisma } from "../prisma";
 
 const turndown = new TurndownService();
 
-export async function bookmarkBlogByUrl(userId: string, url: string) {
+export async function bookmarkBlogByUrl(
+  userId: string,
+  url: string,
+  opts: { save: boolean } = { save: true } // <-- allow optional save flag
+) {
   try {
     const article = await extract(url);
     if (!article) throw new Error("Unable to extract article");
@@ -34,22 +38,23 @@ export async function bookmarkBlogByUrl(userId: string, url: string) {
       },
     });
 
-    await prisma.bookmark.create({
-      data: {
-        userId,
-        url,
-        title: article.title ?? "Untitled",
-        description: article.description ?? "",
-        content: markdown,
-        faviconUrl: article.image ?? "",
-        siteName: blogSource.title,
-        slug: blogPost.id,
-        blogPostId: blogPost.id,
-      },
-    });
+    if (opts.save) {
+      await prisma.bookmark.create({
+        data: {
+          userId,
+          url,
+          title: article.title ?? "Untitled",
+          description: article.description ?? "",
+          content: markdown,
+          faviconUrl: article.image ?? "",
+          siteName: blogSource.title,
+          slug: blogPost.id,
+          blogPostId: blogPost.id,
+        },
+      });
+    }
 
     return {
-      success: true,
       title: article.title ?? "Untitled",
       description: article.description ?? "",
       markdown,

@@ -25,62 +25,64 @@ import { PlusCircle } from "lucide-react";
 
 export function AddBookmarkDialog() {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [platform, setPlatform] = useState("");
   const [category, setCategory] = useState("");
+  const [faviconUrl, setFaviconUrl] = useState("");
+  const [siteName, setSiteName] = useState("");
+  const [image, setImage] = useState("");
 
-  const fetchDetails = async () => {
-    if (!url) return;
-    setLoading(true);
-    setError("");
+  const handleFetch = async () => {
+    if (!url) {
+      alert("Please enter a URL first.");
+      return;
+    }
+
     try {
       const res = await fetch("/api/bookmark/fetch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
       });
+
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to fetch");
+      if (!res.ok) {
+        alert(data.error || "Failed to fetch metadata");
+        return;
+      }
 
       setTitle(data.title || "");
       setDescription(data.description || "");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+      setFaviconUrl(data.faviconUrl || "");
+      setSiteName(data.siteName || "");
+      setImage(data.image || "");
+    } catch (err) {
+      console.error("Error fetching metadata:", err);
+      alert("Something went wrong.");
     }
   };
 
-  const saveBookmark = async () => {
-    setLoading(true);
-    setError("");
+  const handleSave = async () => {
     try {
       const res = await fetch("/api/bookmark/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url,
-          title,
-          description,
-          platform,
-          category,
-        }),
+        body: JSON.stringify({ url, title, description, platform, category }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to save");
+      if (!res.ok) {
+        alert(data.error || "Failed to save bookmark");
+        return;
+      }
 
       setOpen(false);
-      // optionally reset form
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("Something went wrong while saving.");
     }
   };
 
@@ -102,6 +104,7 @@ export function AddBookmarkDialog() {
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
+          {/* URL + Fetch */}
           <div className="grid gap-2">
             <Label htmlFor="url">URL</Label>
             <Input
@@ -110,17 +113,12 @@ export function AddBookmarkDialog() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
             />
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-1 justify-self-end"
-              onClick={fetchDetails}
-              disabled={loading}
-            >
-              {loading ? "Fetching..." : "Fetch details"}
+            <Button variant="outline" size="sm" onClick={handleFetch}>
+              Fetch details
             </Button>
           </div>
 
+          {/* Title */}
           <div className="grid gap-2">
             <Label htmlFor="title">Title</Label>
             <Input
@@ -131,6 +129,7 @@ export function AddBookmarkDialog() {
             />
           </div>
 
+          {/* Description */}
           <div className="grid gap-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
@@ -141,6 +140,7 @@ export function AddBookmarkDialog() {
             />
           </div>
 
+          {/* Platform & Category */}
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="platform">Platform</Label>
@@ -175,20 +175,37 @@ export function AddBookmarkDialog() {
             </div>
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {/* Preview Card */}
+          {title && (
+            <div className="mt-4 border rounded-xl p-4 bg-muted space-y-3">
+              <div className="flex items-center gap-2">
+                {faviconUrl && (
+                  <img src={faviconUrl} alt="Favicon" className="w-5 h-5" />
+                )}
+                <span className="text-sm text-muted-foreground">
+                  {siteName || (url ? new URL(url).hostname : "")}
+                </span>
+              </div>
+              <h4 className="text-base font-medium">{title}</h4>
+              <p className="text-sm text-muted-foreground line-clamp-3">
+                {description}
+              </p>
+              {image && (
+                <img
+                  src={image}
+                  alt="Thumbnail"
+                  className="rounded-md border w-full h-48 object-cover"
+                />
+              )}
+            </div>
+          )}
         </div>
 
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setOpen(false)}
-            disabled={loading}
-          >
+          <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={saveBookmark} disabled={loading}>
-            {loading ? "Saving..." : "Save Bookmark"}
-          </Button>
+          <Button onClick={handleSave}>Save Bookmark</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -72,7 +72,9 @@ export function BookmarkCard({ bookmark }: BookmarkCardProps) {
           )}
         </div>
       )}
-      <CardContent className={`${bookmark.imageUrl ? "pt-4" : "pt-6"} pb-2`}>
+      <CardContent
+        className={`${bookmark.imageUrl ? "pt-4 w-full h-full" : "pt-6"} pb-2`}
+      >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
             <img
