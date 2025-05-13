@@ -1,4 +1,4 @@
-import AuthForm from "./auth-form";
+import AuthForm from "../../api/auth/[...rest]/magic-link/auth-form";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
