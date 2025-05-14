@@ -1,5 +1,6 @@
 "use client";
 
+import Markdown from "react-markdown";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,12 +17,12 @@ import { CommentThread } from "@/components/comment-thread";
 import { BookmarkCard } from "@/components/bookmark-card";
 import { ReadingMode } from "@/components/reading-mode";
 import Link from "next/link";
-import { Bookmark, Tag } from "@prisma/client";
+import { Bookmark, BookmarkTag, Tag } from "@prisma/client";
 import { format } from "date-fns";
 
 interface BookmarkDetailViewProps {
   bookmark: Bookmark & {
-    tags: Tag[];
+    tags: (BookmarkTag & { tag: Tag })[];
   };
 }
 
@@ -29,7 +30,8 @@ export function BookmarkDetailView({ bookmark }: BookmarkDetailViewProps) {
   const [readingMode, setReadingMode] = useState(false);
 
   // Function to render the source icon based on the source type
-  const renderSourceIcon = (sourceType: string) => {
+  const renderSourceIcon = (sourceType: string | null) => {
+    if (!sourceType) return null;
     switch (sourceType) {
       case "twitter":
         return (
@@ -106,10 +108,9 @@ export function BookmarkDetailView({ bookmark }: BookmarkDetailViewProps) {
           </div>
         )}
 
-        {/* <div
-          className="prose prose-lg max-w-none dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: bookmark.content }}
-        /> */}
+        <div className="prose dark:prose-invert">
+          <Markdown>{bookmark.content}</Markdown>
+        </div>
       </ReadingMode>
     );
   }
@@ -128,7 +129,7 @@ export function BookmarkDetailView({ bookmark }: BookmarkDetailViewProps) {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              {bookmark.tags.map((tag) => (
+              {bookmark.tags.map(({ tag }) => (
                 <Badge
                   variant="outline"
                   style={{
@@ -183,6 +184,7 @@ export function BookmarkDetailView({ bookmark }: BookmarkDetailViewProps) {
                   Open in Reading Mode
                 </Button>
               </div>
+
               {/* markdown to html */}
               {/* <div
                 className="prose prose-sm max-w-none dark:prose-invert line-clamp-6 mb-4"

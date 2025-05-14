@@ -21,6 +21,13 @@ export default async function BookmarkPage({
     where: {
       id: (await params).id,
     },
+    include: {
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
+    },
   });
 
   if (!session || session.user.id !== bookmark?.userId) {
@@ -53,19 +60,21 @@ export default async function BookmarkPage({
   }
 
   return (
-    <div className="container max-w-4xl py-8">
-      <div className="flex items-center justify-between mb-6">
-        <Link href="/dashboard">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Back to bookmarks
-          </Button>
-        </Link>
+    <div className="flex justify-center ">
+      <div className="w-full max-w-screen-2xl px-4 space-y-8  py-8">
+        <div className="flex items-center justify-between mb-6">
+          <Link href="/dashboard">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Back to bookmarks
+            </Button>
+          </Link>
 
-        <ShareArchiveDialog />
+          <ShareArchiveDialog />
+        </div>
+        <BookmarkDetailView bookmark={bookmark} />
+        {/* {bookmark.isDeleted ? <DeletedContentFallback bookmark={bookmark} /> : <BookmarkDetailView bookmark={bookmark} />} */}
       </div>
-
-      {/* {bookmark.isDeleted ? <DeletedContentFallback bookmark={bookmark} /> : <BookmarkDetailView bookmark={bookmark} />} */}
     </div>
   );
 }

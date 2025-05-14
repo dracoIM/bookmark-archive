@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,77 +13,70 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { PlusCircle } from "lucide-react";
+import { NewBookMark } from "@/lib/zodSchema";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export function AddBookmarkDialog() {
+  const [isDetailsFetching, setIsDetailsFetching] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState<NewBookMark>({
+    url: "",
+    title: "",
+    description: "",
+    imageUrl: "",
+    markdown: "",
+    faviconUrl: "",
+    siteName: "",
+  });
   const [open, setOpen] = useState(false);
 
-  const [url, setUrl] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [platform, setPlatform] = useState("");
-  const [category, setCategory] = useState("");
-  const [faviconUrl, setFaviconUrl] = useState("");
-  const [siteName, setSiteName] = useState("");
-  const [image, setImage] = useState("");
-
   const handleFetch = async () => {
-    if (!url) {
-      alert("Please enter a URL first.");
-      return;
-    }
-
+    if (!formData.url) return;
+    setIsDetailsFetching(true);
     try {
-      const res = await fetch("/api/bookmark/fetch", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+      const res = await axios.post("/api/bookmark/fetch", {
+        url: formData.url,
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || "Failed to fetch metadata");
-        return;
-      }
-
-      setTitle(data.title || "");
-      setDescription(data.description || "");
-      setFaviconUrl(data.faviconUrl || "");
-      setSiteName(data.siteName || "");
-      setImage(data.image || "");
+      setFormData({
+        url: formData.url,
+        title: res.data.title,
+        description: res.data.description,
+        imageUrl: res.data.image,
+        faviconUrl: res.data.faviconUrl,
+        siteName: res.data.siteName,
+        markdown: res.data.markdown,
+      });
     } catch (err) {
       console.error("Error fetching metadata:", err);
-      alert("Something went wrong.");
+      toast.error("Something went wrong.");
     }
+    setIsDetailsFetching(false);
   };
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      handleFetch();
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [formData.url]);
+
   const handleSave = async () => {
+    setIsSaving(true);
     try {
-      const res = await fetch("/api/bookmark/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, title, description, platform, category }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || "Failed to save bookmark");
-        return;
-      }
-
+      const res = await axios.post("/api/bookmark/save", formData);
       setOpen(false);
     } catch (err) {
       console.error("Save error:", err);
-      alert("Something went wrong while saving.");
+      toast.error("Something went wrong while saving.");
     }
+    setIsSaving(false);
   };
 
   return (
@@ -110,39 +103,42 @@ export function AddBookmarkDialog() {
             <Input
               id="url"
               placeholder="https://example.com/article"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              value={formData.url}
+              onChange={(e) =>
+                setFormData({ ...formData, url: e.target.value })
+              }
             />
-            <Button variant="outline" size="sm" onClick={handleFetch}>
-              Fetch details
-            </Button>
           </div>
 
           {/* Title */}
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
               placeholder="Article title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={formData.title}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
             />
-          </div>
+          </div> */}
 
           {/* Description */}
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
               placeholder="Brief description of the content"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
             />
-          </div>
+          </div> */}
 
           {/* Platform & Category */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
+          {/* <div className="grid grid-cols-2 gap-4"> */}
+          {/* <div className="grid gap-2">
               <Label htmlFor="platform">Platform</Label>
               <Select onValueChange={setPlatform}>
                 <SelectTrigger id="platform">
@@ -156,9 +152,9 @@ export function AddBookmarkDialog() {
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
-            <div className="grid gap-2">
+          {/* <div className="grid gap-2">
               <Label htmlFor="category">Category</Label>
               <Select onValueChange={setCategory}>
                 <SelectTrigger id="category">
@@ -173,26 +169,31 @@ export function AddBookmarkDialog() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
+          </div> */}
 
           {/* Preview Card */}
-          {title && (
+          {formData.title && (
             <div className="mt-4 border rounded-xl p-4 bg-muted space-y-3">
               <div className="flex items-center gap-2">
-                {faviconUrl && (
-                  <img src={faviconUrl} alt="Favicon" className="w-5 h-5" />
+                {formData.faviconUrl && (
+                  <img
+                    src={formData.faviconUrl}
+                    alt="Favicon"
+                    className="w-5 h-5"
+                  />
                 )}
                 <span className="text-sm text-muted-foreground">
-                  {siteName || (url ? new URL(url).hostname : "")}
+                  {formData.siteName ||
+                    (formData.url ? new URL(formData.url).hostname : "")}
                 </span>
               </div>
-              <h4 className="text-base font-medium">{title}</h4>
+              <h4 className="text-base font-medium">{formData.title}</h4>
               <p className="text-sm text-muted-foreground line-clamp-3">
-                {description}
+                {formData.description}
               </p>
-              {image && (
+              {formData.imageUrl && (
                 <img
-                  src={image}
+                  src={formData.imageUrl}
                   alt="Thumbnail"
                   className="rounded-md border w-full h-48 object-cover"
                 />
@@ -205,7 +206,13 @@ export function AddBookmarkDialog() {
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>Save Bookmark</Button>
+          <Button onClick={handleSave} disabled={isDetailsFetching || isSaving}>
+            {isDetailsFetching
+              ? "Fetching..."
+              : isSaving
+                ? "Saving..."
+                : "Save"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

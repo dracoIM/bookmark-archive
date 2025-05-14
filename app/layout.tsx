@@ -2,6 +2,7 @@ import type React from "react";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Providers } from "@/Context/Providers";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "BookmarkVault - Save and organize your online content",
@@ -26,6 +27,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <Toaster position="bottom-right" reverseOrder={false} />
           </ThemeProvider>
         </Providers>
       </body>
