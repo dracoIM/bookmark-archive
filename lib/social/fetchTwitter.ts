@@ -3,8 +3,8 @@ import { prisma } from "../prisma";
 
 export async function fetchTwitterBookmarks(userId: string) {
   try {
-    const account = await prisma.account.findFirst({
-      where: { userId, provider: "X (twitter)" },
+    const account = await prisma.apiKey.findFirst({
+      where: { userId, provider: "twitter" },
     });
 
     if (!account?.accessToken) throw new Error("Missing Twitter access token");
