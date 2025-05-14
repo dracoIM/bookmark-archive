@@ -3,9 +3,21 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
+import { newBookMarkSchema } from "@/lib/zodSchema";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
+  const data = await req.json();
+  const validated = newBookMarkSchema.safeParse(data);
+
+  if (!validated.success) {
+    return NextResponse.json(validated.error.issues, {
+      status: 400,
+    });
+  }
+
+  const { url, title, description, faviconUrl, siteName, imageUrl, markdown } =
+    validated.data;
   // 1. Authenticate
   const session = await auth.api.getSession({
     headers: await headers(), // you need to pass the headers object.
@@ -13,15 +25,6 @@ export async function POST(req: Request) {
 
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  // 2. Parse & validate
-  const { url, title, platform, category, description } = await req.json();
-  if (!url || !title || !platform) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 }
-    );
   }
 
   // 3. Prevent duplicates
@@ -41,11 +44,20 @@ export async function POST(req: Request) {
       title,
       description,
       siteName: new URL(url).hostname,
-      faviconUrl: `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}`,
-      slug: encodeURIComponent(url),
+      faviconUrl:
+        faviconUrl ||
+        `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}`,
+      slug:
+        encodeURIComponent(url) +
+        Date.now() +
+        (Math.random() * 1000).toFixed(0),
+      imageUrl,
+      content: markdown,
+
       // other optional fields: folderId, tags, blogPostId, etc.
     },
   });
+  revalidatePath("/dashboard");
 
   return NextResponse.json(bookmark);
 }
