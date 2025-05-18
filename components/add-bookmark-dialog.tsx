@@ -14,13 +14,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { PlusCircle } from "lucide-react";
+import { Loader, PlusCircle, Search } from "lucide-react";
 import { NewBookMark } from "@/lib/zodSchema";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 export function AddBookmarkDialog() {
-  const [isDetailsFetching, setIsDetailsFetching] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<NewBookMark>({
     url: "",
@@ -32,34 +32,35 @@ export function AddBookmarkDialog() {
     siteName: "",
   });
   const [open, setOpen] = useState(false);
-
-  const handleFetch = async () => {
-    if (!formData.url) return;
-    setIsDetailsFetching(true);
-    try {
+  const fetchDetailQuery = useMutation({
+    mutationFn: async () => {
+      if (!formData.url) return;
       const res = await axios.post("/api/bookmark/fetch", {
         url: formData.url,
       });
-
+      const data = res.data;
       setFormData({
         url: formData.url,
-        title: res.data.title,
-        description: res.data.description,
-        imageUrl: res.data.image,
-        faviconUrl: res.data.faviconUrl,
-        siteName: res.data.siteName,
-        markdown: res.data.markdown,
+        title: data.title,
+        description: data.description,
+        imageUrl: data.image,
+        faviconUrl: data.faviconUrl,
+        siteName: data.siteName,
+        markdown: data.markdown,
       });
-    } catch (err) {
-      console.error("Error fetching metadata:", err);
+      return res.data;
+    },
+    onError(error) {
+      console.error("Error fetching metadata:", error);
       toast.error("Something went wrong.");
-    }
-    setIsDetailsFetching(false);
-  };
+      return false;
+    },
+  });
+  const isDetailsFetching = fetchDetailQuery.isPending;
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      handleFetch();
+      if (!isDetailsFetching) fetchDetailQuery.mutate();
     }, 300);
 
     return () => {
@@ -70,7 +71,7 @@ export function AddBookmarkDialog() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const res = await axios.post("/api/bookmark/save", formData);
+      await axios.post("/api/bookmark/save", formData);
       setOpen(false);
     } catch (err) {
       console.error("Save error:", err);
@@ -100,14 +101,29 @@ export function AddBookmarkDialog() {
           {/* URL + Fetch */}
           <div className="grid gap-2">
             <Label htmlFor="url">URL</Label>
-            <Input
-              id="url"
-              placeholder="https://example.com/article"
-              value={formData.url}
-              onChange={(e) =>
-                setFormData({ ...formData, url: e.target.value })
-              }
-            />
+            <div className="flex gap-2">
+              <Input
+                id="url"
+                placeholder="https://example.com/article"
+                value={formData.url}
+                disabled={isDetailsFetching}
+                onChange={(e) =>
+                  setFormData({ ...formData, url: e.target.value })
+                }
+              />
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => fetchDetailQuery.mutate()}
+                disabled={isDetailsFetching}
+              >
+                {isDetailsFetching ? (
+                  <Loader className="h-6 w-6 animate-spin" />
+                ) : (
+                  <Search className="h-6 w-6" />
+                )}{" "}
+              </Button>
+            </div>
           </div>
 
           {/* Title */}
