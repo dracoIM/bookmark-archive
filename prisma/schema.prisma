@@ -1,6 +1,6 @@
-
 generator client {
   provider = "prisma-client-js"
+  output   = "client"
 }
 
 datasource db {
@@ -28,16 +28,16 @@ model User {
 }
 
 model ApiKey {
-  id             String   @id
-  userId         String
-  provider       String
+  id                    String    @id
+  userId                String
+  provider              String
   accessToken           String?
   idToken               String?
   refreshToken          String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt             DateTime  @default(now())
 }
 
 model Account {
@@ -65,10 +65,10 @@ model Account {
 }
 
 model Bookmark {
-  id          String        @id @default(cuid())
-  user        User          @relation(fields: [userId], references: [id])
+  id          String  @id @default(cuid())
+  user        User    @relation(fields: [userId], references: [id])
   userId      String
-  folder      Folder?       @relation(fields: [folderId], references: [id])
+  folder      Folder? @relation(fields: [folderId], references: [id])
   folderId    String?
   title       String
   url         String
@@ -77,18 +77,16 @@ model Bookmark {
   faviconUrl  String?
   imageUrl    String?
   siteName    String?
-  
-  isPublic    Boolean       @default(false)
-  tags        BookmarkTag[]
-  slug        String?        @unique 
-  highlights  Highlight[]
-  blogPost    BlogPost?     @relation(fields: [blogPostId], references: [id])
-  blogPostId  String?
- 
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
- 
-  
+
+  isPublic   Boolean       @default(false)
+  tags       BookmarkTag[]
+  slug       String?       @unique
+  highlights Highlight[]
+  blogPost   BlogPost?     @relation(fields: [blogPostId], references: [id])
+  blogPostId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Folder {
@@ -119,16 +117,15 @@ model BookmarkTag {
   @@unique([tag_id, bookmark_id])
 }
 
-
 model Highlight {
-  id         String   @id @default(cuid())
-  bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
-  bookmarkId String
+  id               String   @id @default(cuid())
+  bookmark         Bookmark @relation(fields: [bookmarkId], references: [id])
+  bookmarkId       String
   startingPosition Int
-  endingPosition Int
-  comment    String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  endingPosition   Int
+  comment          String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model BlogSource {
