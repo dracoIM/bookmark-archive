@@ -21,6 +21,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import Navbar from "@/components/Navbar";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -37,40 +38,7 @@ export default async function DashboardPage() {
   });
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between py-4">
-          <div className="flex items-center gap-2 font-semibold">
-            <BookOpen className="h-5 w-5" />
-            <span>BookmarkVault</span>
-          </div>
-
-          <div className="relative w-full max-w-sm px-4">
-            <Search className="absolute left-6 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search your bookmarks..."
-              className="w-full pl-10 rounded-full bg-muted"
-            />
-          </div>
-
-          <div className="flex items-center gap-4">
-            <AddBookmarkDialog />
-            <ThemeToggle />
-            <Link href="/settings">
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">Settings</span>
-              </Button>
-            </Link>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <img
-                src="/placeholder.svg?height=32&width=32"
-                alt="User avatar"
-                className="h-8 w-8 rounded-full"
-              />
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <div className="container flex-1 items-start md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10 py-6">
         <aside className="fixed top-20 z-30 -ml-2 hidden h-[calc(100vh-5rem)] w-full shrink-0 overflow-y-auto md:sticky md:block">
