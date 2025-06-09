@@ -74,6 +74,13 @@ export default function SocialMediaConnect({
       color: "bg-[#0077B5] hover:bg-[#006699]",
       connected: false,
     },
+    {
+      id: "youtube",
+      name: "YouTube",
+      icon: <Youtube className="h-5 w-5" />,
+      color: "bg-[#FF0000] hover:bg-[#CC0000]",
+      connected: false,
+    }
   ]);
   const [activeTab, setActiveTab] = useState("connect");
   const [isSubmitted, setIsSubmitted] = useState(false);
